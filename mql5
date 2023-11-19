@@ -1,0 +1,50 @@
+
+// EA Rainbow - Forex Robot Easy
+// Developer's Site: forexroboteasy.com
+// Developed by: Forex Robot Easy Team
+
+// Import necessary libraries and classes
+#include <Trade\Trade.mqh>
+#include <Indicators\Indicators.mqh>
+
+// Define input parameters
+input double MaxBuys = 5; // Maximum number of buy orders
+input double MaxSells = 5; // Maximum number of sell orders
+input double LotSize = 0.01; // Starting lot size
+input string Comment = 'EA Rainbow'; // Order comments
+
+// Initialize objects
+CTrade trade;
+CRainbow rainbow;
+
+// Initialize variables
+int totalBuyOrders = 0; // Total number of buy orders opened
+int totalSellOrders = 0; // Total number of sell orders opened
+
+// Start of the trading function
+void OnTick()
+{
+    // Calculate Rainbow indicator values
+    double rainbowValue = rainbow.iRainbow(Symbol(), PERIOD_CURRENT, 14, 3, PRICE_CLOSE, MODE_MAIN, 0);
+
+    // Check for buy signal
+    if (rainbowValue > 0 && totalBuyOrders < MaxBuys)
+    {
+        // Open buy position
+        trade.Buy(LotSize, Symbol(), 0, 0, Comment);
+        totalBuyOrders++;
+    }
+
+    // Check for sell signal
+    if (rainbowValue < 0 && totalSellOrders < MaxSells)
+    {
+        // Open sell position
+        trade.Sell(LotSize, Symbol(), 0, 0, Comment);
+        totalSellOrders++;
+    }
+}
+
+// End of the trading function
+
+// Additional functions can be added below if needed
+
